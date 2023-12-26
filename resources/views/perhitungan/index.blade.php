@@ -48,9 +48,12 @@
         <tr>
             <th>No</th>
             <th>Nama</th>
-            <th>Protein</th>
+            @foreach ( $kriteria as $kri)
+                <th>{{ $kri->kriteria }}</th>
+            @endforeach
+            {{-- <th>Protein</th>
             <th>Karbohidrat</th>
-            <th>Kalori</th>
+            <th>Kalori</th> --}}
             <th>Hasil</th>
             <th>Opsi</th>
         </tr>
@@ -89,10 +92,14 @@
 
         @endforeach
     </table>
-    @if( $hitungMax == null)
+    @if( $maxData == null)
         <p>Tidak ada hasil</p>
     @else
-        <p>Jadi Makanan yang direkomendasikan adalah <b>{{ $hitungMax->nama }}</b> dengan nilai sebesar <b>{{ $hitungMax->hasil }}</b></p>
+
+    <p>Jadi Makanan yang direkomendasikan adalah <b>@foreach ( $maxData as $max )
+        {{ $max->nama }},
+        @endforeach</b> dengan nilai sebesar <b>{{ $max->hasil }}</b>
+
     @endif
 @endsection
 

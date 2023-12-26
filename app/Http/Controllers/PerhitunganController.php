@@ -14,6 +14,8 @@ class PerhitunganController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+
     public function index()
     {
         $proteinOptions = ProteinKriteria::select('protein','nilai', 'id' )->get();
@@ -26,14 +28,20 @@ class PerhitunganController extends Controller
         $dataKalori = Perhitungan::with('kalori')->get();
 
         $hitungs = Perhitungan::all();
+        $max = Perhitungan::max('hasil');
+
+        $kriteria = BobotKriteria::all();
+        // $maxData = Perhitungan::where('hasil', $max)->get();
 
         // $bobot = BobotKriteria::select('bobot')->get();
         // $karbohidrat = Karbohidrat::select('nilai')->get();
         if (count($hitungs) > 0)
         {
-            $hitungMax = $hitungs->sortByDesc('hasil')->first();
+            $maxData = Perhitungan::where('hasil', $max)->get();
+            // dd($maxData);
+            // $hitungMax = $hitungs->sortByDesc('hasil')->first();
         } else {
-            $hitungMax = null;
+            $maxData = null;
         }
 
         // $hasil = ($proteinOptions->get('nilai') * $bobot[0]->bobot) + ($karbohidrat * $bobot[1]->bobot);
@@ -45,7 +53,7 @@ class PerhitunganController extends Controller
         // $bobotKarbohidrat = $bobot->skip(1)->first()->bobot;
 
         // $hasil = ($proteinOptions->pluck('nilai')->first() * $bobotProtein) + ($karbohidrat->first()->nilai * $bobotKarbohidrat);
-        return view('perhitungan.index', compact('proteinOptions','karbohidratOptions', 'dataKarbohidrat' ,'hitungs', 'dataProtein', 'hitungMax', 'kaloriOptions', 'dataKalori'))->with('i');
+        return view('perhitungan.index', compact('kriteria','proteinOptions','karbohidratOptions', 'dataKarbohidrat' ,'hitungs', 'dataProtein', 'maxData', 'kaloriOptions', 'dataKalori', 'max'))->with('i');
     }
 
     /**
