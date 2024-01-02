@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('kaloris', function (Blueprint $table) {
+        Schema::create('natria', function (Blueprint $table) {
             $table->id();
-            $table->string('kalori');
+            $table->string('natrium');
             $table->integer('nilai');
             $table->timestamps();
         });
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('kaloris');
+        Schema::dropIfExists('natria');
     }
 };

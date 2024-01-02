@@ -13,6 +13,8 @@ class Perhitungan extends Model
         'id_protein',
         'id_karbohidrat',
         'id_kalori',
+        'id_natrium',
+        'id_usia',
         'hasil'
     ];
 
@@ -31,6 +33,15 @@ class Perhitungan extends Model
         return $this->belongsTo(Kalori::class, 'id_kalori', 'id');
     }
 
+    public function natrium()
+    {
+        return $this->belongsTo(Natrium::class, 'id_natrium', 'id');
+    }
+
+    public function usia()
+    {
+        return $this->belongsTo(Usia::class, 'id_usia', 'id');
+    }
 
     // public function fillTable()
     // {

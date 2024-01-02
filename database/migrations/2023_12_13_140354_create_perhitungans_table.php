@@ -17,6 +17,8 @@ return new class extends Migration
             $table->unsignedBigInteger('id_protein');
             $table->unsignedBigInteger('id_karbohidrat');
             $table->unsignedBigInteger('id_kalori');
+            $table->unsignedBigInteger('id_natrium');
+            $table->unsignedBigInteger('id_usia');
             $table->float('hasil');
             $table->timestamps();
         });

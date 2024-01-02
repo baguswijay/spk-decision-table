@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\BobotKriteria;
 use App\Models\Kalori;
 use App\Models\Karbohidrat;
+use App\Models\Natrium;
 use App\Models\Perhitungan;
 use App\Models\ProteinKriteria;
+use App\Models\Usia;
 use Illuminate\Http\Request;
 
 class PerhitunganController extends Controller
@@ -26,6 +28,12 @@ class PerhitunganController extends Controller
 
         $kaloriOptions = Kalori::all();
         $dataKalori = Perhitungan::with('kalori')->get();
+
+        $natriumOptions = Natrium::all();
+        $dataNatrium = Perhitungan::with('natrium')->get();
+
+        $usiaOptions = Usia::all();
+        $dataUsia = Perhitungan::with('usia')->get();
 
         $hitungs = Perhitungan::all();
         $max = Perhitungan::max('hasil');
@@ -53,7 +61,8 @@ class PerhitunganController extends Controller
         // $bobotKarbohidrat = $bobot->skip(1)->first()->bobot;
 
         // $hasil = ($proteinOptions->pluck('nilai')->first() * $bobotProtein) + ($karbohidrat->first()->nilai * $bobotKarbohidrat);
-        return view('perhitungan.index', compact('kriteria','proteinOptions','karbohidratOptions', 'dataKarbohidrat' ,'hitungs', 'dataProtein', 'maxData', 'kaloriOptions', 'dataKalori', 'max'))->with('i');
+        return view('perhitungan.index', compact('kriteria','proteinOptions','karbohidratOptions', 'dataKarbohidrat' ,'hitungs', 'dataProtein', 'maxData', 'kaloriOptions', 'dataKalori', 'max',
+        'natriumOptions', 'dataNatrium', 'usiaOptions', 'dataUsia'))->with('i');
     }
 
     /**
@@ -74,28 +83,38 @@ class PerhitunganController extends Controller
             'nama' => 'required|string',
             'id_protein' => 'required|exists:protein_kriterias,id',
             'id_karbohidrat' => 'required|exists:karbohidrats,id',
-            'id_kalori' => 'required|exists:kaloris,id'
+            'id_kalori' => 'required|exists:kaloris,id',
+            'id_natrium' => 'required|exists:natria,id',
+            'id_usia'   => 'required|exists:usias,id'
         ]);
 
         $protein = ProteinKriteria::find($request->id_protein);
         $karbohidrat = Karbohidrat::find($request->id_karbohidrat);
         $kalori = Kalori::find($request->id_kalori);
+        $natrium = Natrium::find($request->id_natrium);
+        $usia   = Usia::find($request->id_usia);
 
         $bobotKriteriaProtein = BobotKriteria::where('kriteria', 'Protein')->first();
         $bobotKriteriaKarbohidrat = BobotKriteria::where('kriteria', 'Karbohidrat')->first();
         $bobotKriteriaKalori = BobotKriteria::where('kriteria', 'Kalori')->first();
+        $bobotKriteriaNatrium = BobotKriteria::where('kriteria', 'Natrium')->first();
+        $bobotKriteriaUsia = BobotKriteria::where('kriteria', 'Usia')->first();
 
-        $nilaiBobotProtein = $bobotKriteriaProtein ? $bobotKriteriaProtein->bobot : 0.6;
+        $nilaiBobotProtein = $bobotKriteriaProtein ? $bobotKriteriaProtein->bobot : 0.2;
         $nilaiBobotKarbohidrat = $bobotKriteriaKarbohidrat ? $bobotKriteriaKarbohidrat->bobot : 0.2;
         $nilaiBobotKalori = $bobotKriteriaKalori ? $bobotKriteriaKalori->bobot : 0.2;
+        $nilaiBobotNatrium = $bobotKriteriaNatrium ? $bobotKriteriaNatrium->bobot : 0.2;
+        $nilaiBobotUsia = $bobotKriteriaUsia ? $bobotKriteriaUsia->bobot : 0.2;
 
-        $hasil = ($protein->nilai * $nilaiBobotProtein) + ($karbohidrat->nilai * $nilaiBobotKarbohidrat) + ($kalori->nilai * $nilaiBobotKalori);
+        $hasil = ($protein->nilai * $nilaiBobotProtein) + ($karbohidrat->nilai * $nilaiBobotKarbohidrat) + ($kalori->nilai * $nilaiBobotKalori) + ($natrium->nilai * $nilaiBobotNatrium) + ($usia->nilai * $nilaiBobotUsia);
 
         Perhitungan::create([
             'nama' => $request->nama,
             'id_protein' => $request->id_protein,
             'id_karbohidrat' => $request->id_karbohidrat,
             'id_kalori' => $request->id_kalori,
+            'id_natrium' => $request->id_natrium,
+            'id_usia' => $request->id_usia,
             'hasil' => $hasil,
         ]);
 
@@ -119,11 +138,13 @@ class PerhitunganController extends Controller
         $proteinOptions = ProteinKriteria::select('protein','nilai', 'id' )->get();
         $karbohidratOptions = Karbohidrat::all();
         $kaloriOptions = Kalori::all();
+        $natriumOptions = Natrium::all();
+        $usiaOptions = Usia::all();
         // $hitungs = Perhitungan::all();
         $dataProtein = Perhitungan::with('protein')->get();
         $dataKarbohidrat = Perhitungan::with('karbohidrat')->get();
 
-        return view('perhitungan.edit', compact('hitungs', 'proteinOptions', 'dataProtein', 'karbohidratOptions', 'dataKarbohidrat', 'kaloriOptions'));
+        return view('perhitungan.edit', compact('hitungs', 'proteinOptions', 'dataProtein', 'karbohidratOptions', 'dataKarbohidrat', 'kaloriOptions', 'natriumOptions', 'usiaOptions'));
     }
 
     /**
@@ -137,6 +158,8 @@ class PerhitunganController extends Controller
             'id_protein' => 'required|exists:protein_kriterias,id',
             'id_karbohidrat' => 'required|exists:karbohidrats,id',
             'id_kalori' => 'required|exists:kaloris,id',
+            'id_natrium' => 'required|exists:natria, id',
+            'id_usia'   => 'required|exists:usias, id'
         ]);
 
         $hitungs =Perhitungan::find($id);
@@ -144,23 +167,30 @@ class PerhitunganController extends Controller
         $protein = ProteinKriteria::find($request->id_protein);
         $karbohidrat = Karbohidrat::find($request->id_karbohidrat);
         $kalori = Kalori::find($request->id_kalori);
+        $natrium = Natrium::find($request->id_natrium);
+        $usia   = Usia::find($request->id_usia);
 
         $bobotKriteriaProtein = BobotKriteria::where('kriteria', 'Protein')->first();
         $bobotKriteriaKarbohidrat = BobotKriteria::where('kriteria', 'Karbohidrat')->first();
         $bobotKriteriaKalori = BobotKriteria::where('kriteria', 'Kalori')->first();
+        $bobotKriteriaNatrium = BobotKriteria::where('kriteria', 'Natrium')->first();
+        $bobotKriteriaUsia = BobotKriteria::where('kriteria', 'Usia')->first();
 
-        $nilaiBobotProtein = $bobotKriteriaProtein ? $bobotKriteriaProtein->bobot : 0.6;
+        $nilaiBobotProtein = $bobotKriteriaProtein ? $bobotKriteriaProtein->bobot : 0.2;
         $nilaiBobotKarbohidrat = $bobotKriteriaKarbohidrat ? $bobotKriteriaKarbohidrat->bobot : 0.2;
         $nilaiBobotKalori = $bobotKriteriaKalori ? $bobotKriteriaKalori->bobot : 0.2;
+        $nilaiBobotNatrium = $bobotKriteriaNatrium ? $bobotKriteriaNatrium->bobot : 0.2;
+        $nilaiBobotUsia = $bobotKriteriaUsia ? $bobotKriteriaUsia->bobot : 0.2;
 
-        $hasil = ($protein->nilai * $nilaiBobotProtein) + ($karbohidrat->nilai * $nilaiBobotKarbohidrat) + ($kalori->nilai * $nilaiBobotKalori);
+        $hasil = ($protein->nilai * $nilaiBobotProtein) + ($karbohidrat->nilai * $nilaiBobotKarbohidrat) + ($kalori->nilai * $nilaiBobotKalori) + ($natrium->nilai * $nilaiBobotNatrium) + ($usia->nilai * $nilaiBobotUsia);
 
-
-        $hitungs -> update([
-            'nama' => $request -> nama,
-            'id_protein' => $request -> id_protein,
-            'id_karbohidrat' => $request -> id_karbohidrat,
-            'id_kalori' => $request -> id_kalori,
+        Perhitungan::create([
+            'nama' => $request->nama,
+            'id_protein' => $request->id_protein,
+            'id_karbohidrat' => $request->id_karbohidrat,
+            'id_kalori' => $request->id_kalori,
+            'id_natrium' => $request->id_natrium,
+            'id_usia' => $request->id_usia,
             'hasil' => $hasil,
         ]);
 

@@ -41,6 +41,24 @@
                 @endforeach
             </select>
         </div>
+        <div class="form-floating col-md-6">
+            <select name="id_natrium" id="natrium" class="form-select">
+                @foreach ( $natriumOptions as $natriumOption )
+                    <option value="{{ $natriumOption->id }}" @if($natriumOption->id == $hitungs->id_natrium)
+                        selected
+                    @endif>{{ $natriumOption->nilai }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="form-floating col-md-6">
+            <select name="id_usia" id="usia" class="form-select">
+                @foreach ( $usiaOptions as $usiaOption )
+                    <option value="{{ $usiaOption->id }}" @if($usiaOption->id == $hitungs->id_usia)
+                        selected
+                    @endif>{{ $usiaOption->nilai }}</option>
+                @endforeach
+            </select>
+        </div>
         <div class="button">
             <button type="submit" class="btn btn-success">Update</button>
         </div>

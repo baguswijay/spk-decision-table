@@ -19,7 +19,9 @@ Route::get('/', function () {
     return view('home');
 });
 
-Route::resource('/bobot', BobotKriteriaController::class);
+Route::resource('/kriteria', BobotKriteriaController::class);
+// Route::get('/kriteria/edit/{id}', [BobotKriteriaController::class, 'edit'])->name('kriterias.edit');
+// Route::post('/kriteria/update/{id}', [BobotKriteriaController::class, 'update'])->name('kriterias.update');
 // Route::resource('/hitung', \App\Http\Controllers\PerhitunganController::class);
 
 Route::get('/hitung', [PerhitunganController::class, 'index'])->name('hitung.index');

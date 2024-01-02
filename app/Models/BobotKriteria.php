@@ -18,7 +18,7 @@ class BobotKriteria extends Model
         $bobotKriteria = [
             [
                 'kriteria' => 'Protein',
-                'bobot' => '0.6'
+                'bobot' => '0.2'
             ],
             [
                 'kriteria' => 'Karbohidrat',
@@ -26,6 +26,14 @@ class BobotKriteria extends Model
             ],
             [
                 'kriteria' => 'Kalori',
+                'bobot' => '0.2'
+            ],
+            [
+                'kriteria' => 'Natrium',
+                'bobot' => '0.2'
+            ],
+            [
+                'kriteria' => 'Usia',
                 'bobot' => '0.2'
             ],
         ];
